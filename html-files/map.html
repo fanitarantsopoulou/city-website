@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florina RPG Map - Final</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. ΤΟ ΦΟΝΤΟ --- */
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            background-color: #1a1a2e;
+            position: relative;
+        }
+
+        /* Τίτλος Πάνω Ψηλά */
+        .page-title {
+            position: absolute;
+            top: 20px;
+            color: #fff;
+            text-shadow: 4px 4px 0 #000;
+            font-size: 1.5rem;
+            z-index: 5;
+            text-align: center;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        /* --- BACK BUTTON (ΠΑΓΩΜΕΝΟ) --- */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: #e0f7fa; /* Παγωμένο λευκό */
+            text-decoration: none;
+            font-size: 1.5rem; /* Μεγάλο βέλος */
+            text-shadow: 0 0 10px #00bcd4; /* Λάμψη πάγου */
+            z-index: 100;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .back-btn:hover {
+            transform: scale(1.1);
+            color: #fff;
+        }
+        /* Η Σταγόνα που στάζει */
+        .back-btn::after {
+            content: '💧';
+            font-size: 0.8rem;
+            position: absolute;
+            bottom: -15px;
+            left: 5px;
+            opacity: 0.8;
+            animation: drip 2s infinite ease-in;
+        }
+        
+        @keyframes drip {
+            0% { transform: translateY(0); opacity: 1; }
+            80% { transform: translateY(10px); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+
+        /* Χιόνι στο Background */
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh); }
+        }
+
+        /* Δέντρα στο Background */
+        .bg-tree {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* --- 2. Η ΚΟΝΣΟΛΑ --- */
+        .game-console {
+            width: 800px;
+            height: 600px;
+            background: #212121;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 
+                0 0 0 10px #424242,
+                0 20px 50px rgba(0,0,0,0.8);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        .console-deco {
+            position: absolute;
+            top: 50%;
+            width: 10px;
+            height: 60px;
+            background: #424242;
+            transform: translateY(-50%);
+        }
+        .left-deco { left: 8px; border-radius: 5px 0 0 5px; }
+        .right-deco { right: 8px; border-radius: 0 5px 5px 0; }
+
+        /* --- 3. Ο ΧΑΡΤΗΣ --- */
+        .map-screen {
+            flex-grow: 1;
+            background: linear-gradient(180deg, #e3f2fd 15%, #ffffff 30%, #a8e063 50%, #81c784 80%, #4fc3f7 100%);
+            border: 4px solid #000;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .pixel-grid {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* --- SAKOULEVAS RIVER --- */
+        .river-strip {
+            position: absolute;
+            top: 280px;
+            left: -50px;
+            width: 120%;
+            height: 40px;
+            background: #29b6f6;
+            transform: rotate(-10deg);
+            border-top: 3px solid #0288d1;
+            border-bottom: 3px solid #0288d1;
+            z-index: 1;
+        }
+
+        /* --- POIs (Κουμπιά) --- */
+        .poi {
+            position: absolute;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.2s;
+            filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.3));
+        }
+        .poi:hover { transform: scale(1.2) rotate(-5deg); }
+        
+        .poi-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .poi:hover .poi-label { opacity: 1; }
+
+        /* Θέσεις */
+        .vigla { top: 40px; right: 80px; }
+        .nymfaio { top: 180px; left: 80px; }
+        .lakes { bottom: 40px; right: 100px; font-size: 3rem; }
+        .sakoulevas { top: 250px; left: 45%; font-size: 2.2rem; }
+        .sweet { top: 310px; left: 35%; font-size: 2rem; }
+        .pepper { bottom: 120px; left: 150px; font-size: 2.2rem; }
+
+        /* --- SPRITES & ANIMATIONS --- */
+        .sprite {
+            position: absolute;
+            font-size: 3rem;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 20;
+        }
+
+        /* Animations */
+        @keyframes skiBig {
+            0% { top: 60px; right: 120px; opacity: 1; transform: rotate(-10deg); }
+            100% { top: 400px; right: 600px; opacity: 1; transform: rotate(10deg); }
+        }
+
+        @keyframes boatSailBig {
+            0% { left: -100px; opacity: 1; transform: rotate(0deg); }
+            100% { left: 900px; opacity: 1; transform: rotate(0deg); }
+        }
+        
+        @keyframes duckFloat {
+            0% { left: 0%; top: 280px; opacity: 1; transform: rotate(-10deg); }
+            100% { left: 100%; top: 150px; opacity: 1; transform: rotate(-10deg); }
+        }
+
+        @keyframes bearPop {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes fireBurn {
+            0% { transform: scale(1); opacity: 1; }
+            25% { transform: scale(1.2) rotate(5deg); }
+            50% { transform: scale(0.9) rotate(-5deg); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        @keyframes jarBounce {
+            0%, 100% { transform: translateY(0); opacity: 1;}
+            50% { transform: translateY(-20px); opacity: 1;}
+        }
+
+        /* Classes */
+        .anim-ski { animation: skiBig 3s linear forwards; }
+        .anim-bear { animation: bearPop 1s forwards; }
+        .anim-boat { animation: boatSailBig 6s linear forwards; }
+        .anim-duck { animation: duckFloat 5s linear forwards; }
+        .anim-jar { animation: jarBounce 0.5s infinite alternate; }
+        .anim-fire { animation: fireBurn 1.5s infinite; }
+
+        /* --- TEXTBOX --- */
+        .textbox {
+            margin-top: 15px;
+            background: #333;
+            color: #4fc3f7;
+            padding: 15px;
+            border-radius: 8px;
+            height: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 2px solid #555;
+            box-shadow: inset 0 0 10px #000;
+        }
+
+        /* --- ΔΙΑΚΟΣΜΗΤΙΚΑ --- */
+        .tree { position: absolute; font-size: 1.5rem; opacity: 0.7; pointer-events: none; z-index:3; }
+
+    </style>
+</head>
+<body>
+
+    <script>
+        for(let i=0; i<50; i++) {
+            let snow = document.createElement('div');
+            snow.className = 'snowflake';
+            snow.style.left = Math.random() * 100 + 'vw';
+            snow.style.width = Math.random() * 5 + 3 + 'px';
+            snow.style.height = snow.style.width;
+            snow.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.body.appendChild(snow);
+        }
+    </script>
+    
+    <div class="bg-tree" style="left: 5%; bottom: 10%;">🌲</div>
+    <div class="bg-tree" style="left: 10%; bottom: 5%;">❄️</div>
+    <div class="bg-tree" style="right: 5%; bottom: 10%;">🌲</div>
+    <div class="bg-tree" style="right: 8%; bottom: 20%;">🌲</div>
+    <div class="bg-tree" style="right: 12%; top: 10%;">❄️</div>
+
+    <h1 class="page-title">FLORINA REGION MAP</h1>
+    
+    <a href="index.html" class="back-btn">⬅</a>
+
+    <div class="game-console">
+        <div class="console-deco left-deco"></div>
+        <div class="console-deco right-deco"></div>
+
+        <div class="map-screen" id="map">
+            <div class="pixel-grid"></div>
+            <div class="river-strip"></div>
+
+            <span class="tree" style="top:30px; left:50px">🌲</span>
+            <span class="tree" style="top:80px; left:120px">🌲</span>
+            <span class="tree" style="top:40px; left:300px">❄️</span>
+            <span class="tree" style="top:200px; left:50px">🏰</span>
+            <span class="tree" style="bottom:150px; right:50px">💧</span>
+            
+            <div class="poi vigla" onclick="actionVigla()">🏔️<div class="poi-label">Vigla Ski</div></div>
+            <div class="poi nymfaio" onclick="actionNymfaio()">🐾<div class="poi-label">Arcturos</div></div>
+            <div class="poi lakes" onclick="actionLakes()">🌊<div class="poi-label">Lakes Region</div></div>
+            
+            <div class="poi sakoulevas" onclick="actionSakoulevas()">🦆<div class="poi-label">River Sakoulevas</div></div>
+            
+            <div class="poi sweet" onclick="actionSweet()">🍯<div class="poi-label">Spoon Sweet</div></div>
+            <div class="poi pepper" onclick="actionPepper()">🌶️<div class="poi-label">Tsouska Pepper</div></div>
+
+            <div id="skier" class="sprite">⛷️</div>
+            <div id="bear" class="sprite" style="top:180px; left:150px;">🐻</div>
+            <div id="boat" class="sprite" style="bottom:30px; left:-50px;">🛶</div>
+            <div id="duck" class="sprite">🦆</div>
+            <div id="jar" class="sprite" style="top:280px; left:35%;">🍓</div>
+            <div id="fire" class="sprite" style="bottom:120px; left:150px;">🔥</div>
+        </div>
+
+        <div class="textbox" id="text-content">
+            <div>FLORINA REGION MAP</div>
+            <div style="color:#fff; font-size:0.6rem; margin-top:8px;">Select a location to explore</div>
+        </div>
+    </div>
+
+    <script>
+        const textDisplay = document.getElementById('text-content');
+        const skier = document.getElementById('skier');
+        const bear = document.getElementById('bear');
+        const boat = document.getElementById('boat'); 
+        const duck = document.getElementById('duck');
+        const jar = document.getElementById('jar');
+        const fire = document.getElementById('fire');
+
+        function resetAnimations() {
+            skier.classList.remove('anim-ski');
+            bear.classList.remove('anim-bear');
+            boat.classList.remove('anim-boat');
+            duck.classList.remove('anim-duck');
+            jar.classList.remove('anim-jar');
+            fire.classList.remove('anim-fire');
+            
+            jar.style.opacity = 0;
+            fire.style.opacity = 0;
+            
+            void skier.offsetWidth;
+            void bear.offsetWidth;
+            void boat.offsetWidth;
+            void duck.offsetWidth;
+            void jar.offsetWidth;
+            void fire.offsetWidth;
+        }
+
+        // 1. ΒΙΓΛΑ (Χωρίς Status)
+        function actionVigla() {
+            resetAnimations();
+            skier.classList.add('anim-ski');
+            textDisplay.innerHTML = `
+                <span style="color:#fff">VIGLA PISODERI</span><br>
+                Wooosh! Full of snow today. Watch out for the trees! 🌲
+            `;
+        }
+
+        function actionNymfaio() {
+            resetAnimations();
+            bear.classList.add('anim-bear');
+            textDisplay.innerHTML = `
+                <span style="color:#fff">NYMFAIO VILLAGE</span><br>
+                You spotted a brown bear at Arcturos!
+            `;
+        }
+
+        function actionLakes() {
+            resetAnimations();
+            boat.classList.add('anim-boat');
+            textDisplay.innerHTML = `
+                <span style="color:#fff">THE LAKES REGION</span><br>
+                <span style="font-size:0.6rem">Vegoritida, Prespes, Cheimaditida... and many more!</span>
+            `;
+        }
+
+        // 2. ΠΟΤΑΜΙ (Απλό κείμενο)
+        function actionSakoulevas() {
+            resetAnimations();
+            duck.classList.add('anim-duck');
+            textDisplay.innerHTML = `
+                <span style="color:#fff">RIVER SAKOULEVAS</span><br>
+                The frozen river that crosses the city.
+            `;
+        }
+        
+        function actionSweet() {
+            resetAnimations();
+            jar.style.opacity = 1;
+            jar.classList.add('anim-jar');
+            textDisplay.innerHTML = `
+                <span style="color:#ff6b6b">LOCAL TREAT FOUND!</span><br>
+                Traditional "Spoon Sweet" (Jar). Tastes like heaven!
+            `;
+        }
+
+        // 3. ΤΣΟΥΣΚΑ (Χωρίς +Stats)
+        function actionPepper() {
+            resetAnimations();
+            fire.style.opacity = 1;
+            fire.classList.add('anim-fire');
+            textDisplay.innerHTML = `
+                <span style="color:#ff5252">TSOUSKA PEPPER</span><br>
+                Warning: Extremely SPICY! 🔥
+            `;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="el">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to Florina 🐻❄️</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-color: #e0f7fa;
+        --text-color: #2c3e50;
+        --card-bg: #ffffff;
+        --accent: #ff6b6b;
+        --river: #4fc3f7;
+        --border: 4px solid #2c3e50;
+        --shadow: 8px 8px 0px #2c3e50;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Press Start 2P", cursive;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* --- Header --- */
+      header {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(180deg, #b2ebf2 0%, #e0f7fa 100%);
+        border-bottom: var(--border);
+      }
+
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        text-shadow: 3px 3px 0px #fff;
+      }
+      .subtitle {
+        font-size: 0.7rem;
+        color: #546e7a;
+      }
+
+      /* --- Container & Cards --- */
+      .container {
+        max-width: 1000px; /* Πλατιές κάρτες */
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border: var(--border);
+        box-shadow: var(--shadow);
+        padding: 25px;
+        margin-bottom: 40px;
+        position: relative;
+        transition: transform 0.2s;
+        text-align: left; /* Κείμενο αριστερά */
+      }
+      .card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 10px 10px 0px #2c3e50;
+      }
+
+      .card-title {
+        background: var(--text-color);
+        color: white;
+        padding: 8px 15px;
+        display: inline-block;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+      }
+
+      .pixel-img {
+        font-size: 3.5rem;
+        display: block;
+        margin: 15px 0;
+        text-align: center;
+      }
+
+      p {
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+      }
+      /* --- Flip Card Logic --- */
+      .flip-card {
+        background-color: transparent;
+        width: 100%;
+        height: 250px; /* Ή όσο ύψος θέλεις */
+        perspective: 1000px;
+        margin-bottom: 30px;
+      }
+
+      .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+      }
+
+      /* Η κλάση που θα προσθέτουμε με JS για να γυρνάει */
+      .is-flipped {
+        transform: rotateY(180deg);
+      }
+
+      .flip-card-front,
+      .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        border: var(--border);
+        box-shadow: var(--shadow);
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .flip-card-front {
+        background-color: #fff;
+      }
+
+      .flip-card-back {
+        background-color: #fff9c4; /* Ένα ελαφρύ κίτρινο για την πίσω όψη */
+        transform: rotateY(180deg);
+      }
+
+      /* Το Pixel Βέλος */
+      .flip-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 1.5rem;
+        transition: transform 0.2s;
+        background: none;
+        border: none;
+      }
+      .flip-btn:hover {
+        transform: scale(1.3);
+      }
+
+      /* --- River Divider --- */
+      .river-divider {
+        height: 20px;
+        background: var(--river);
+        margin: 50px 0;
+        border-top: 4px solid #2c3e50;
+        border-bottom: 4px solid #2c3e50;
+        position: relative;
+      }
+      .river-divider::after {
+        content: "RIVER SAKOULEVAS";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.5rem;
+        background: white;
+        padding: 2px 5px;
+        border: 2px solid #2c3e50;
+      }
+
+      /* --- Buttons --- */
+      .btn {
+        display: inline-block;
+        background: var(--accent);
+        color: white;
+        text-decoration: none;
+        padding: 12px 20px;
+        font-size: 0.8rem;
+        border: 2px solid #2c3e50;
+        box-shadow: 4px 4px 0px #2c3e50;
+        cursor: pointer;
+        text-align: center;
+      }
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0px #2c3e50;
+      }
+
+      /* --- Snow Effect --- */
+      .snowflake {
+        position: fixed;
+        top: -10px;
+        background: white;
+        width: 8px;
+        height: 8px;
+        border: 1px solid #2c3e50;
+        z-index: 1;
+        pointer-events: none;
+        animation: fall linear infinite;
+      }
+      @keyframes fall {
+        to {
+          transform: translateY(105vh);
+        }
+      }
+
+      /* --- NIGHT SECTION (COMPACT VERSION) --- */
+      .night-section {
+        background-color: #1a1a2e;
+        color: #ffccbc;
+
+        /* ΑΛΛΑΓΗ: Πολύ μικρότερο padding για να μην πιάνει χώρο */
+        padding: 30px 20px;
+
+        margin-top: 40px;
+        border-top: 4px solid #2c3e50;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        /* ΑΛΛΑΓΗ: Τα φέρνω πιο κοντά μεταξύ τους */
+        gap: 15px;
+
+        text-align: center;
+      }
+
+      .night-section h2 {
+        margin: 0;
+        font-size: 1.4rem; /* Λίγο πιο μικρός τίτλος */
+        color: #ffccbc;
+      }
+
+      .fire-desc {
+        text-align: center !important;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-size: 0.75rem; /* Μικρά γράμματα */
+        color: #ffab91;
+        display: block;
+      }
+
+      .fire-container {
+        position: relative;
+        width: 50px;
+        height: 50px;
+
+        /* ΑΥΤΟ ΠΡΟΣΘΕΣΕ ΓΙΑ ΝΑ ΣΠΡΩΞΕΙ ΤΟ ΚΟΥΜΠΙ ΚΑΤΩ */
+        margin-bottom: 20px;
+      }
+
+      /* --- Fire Animation --- */
+      .pixel-fire {
+        width: 10px;
+        height: 10px;
+        background: transparent;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow:
+          -10px 20px 0 #5d4037,
+          0 20px 0 #4e342e,
+          10px 20px 0 #6d4c41,
+          -20px 20px 0 #3e2723,
+          20px 20px 0 #3e2723,
+          -10px 10px 0 #d32f2f,
+          0 10px 0 #d32f2f,
+          10px 10px 0 #d32f2f,
+          -10px 0 0 #f57c00,
+          0 0 0 #f57c00,
+          10px 0 0 #f57c00,
+          0 -10px 0 #ffeb3b,
+          -10px -10px 0 #ffca28,
+          10px -10px 0 #ffca28;
+        animation: burn 0.8s infinite alternate;
+      }
+
+      @keyframes burn {
+        0% {
+          transform: translateX(-50%) translateY(0);
+          box-shadow:
+            -10px 20px 0 #5d4037,
+            0 20px 0 #4e342e,
+            10px 20px 0 #6d4c41,
+            -20px 20px 0 #3e2723,
+            20px 20px 0 #3e2723,
+            -10px 10px 0 #d32f2f,
+            0 10px 0 #d32f2f,
+            10px 10px 0 #d32f2f,
+            -10px 0 0 #f57c00,
+            0 0 0 #f57c00,
+            10px 0 0 #f57c00,
+            0 -10px 0 #ffeb3b,
+            -10px -10px 0 #ffca28,
+            10px -10px 0 #ffca28;
+        }
+        100% {
+          transform: translateX(-50%) translateY(-2px);
+          box-shadow:
+            -10px 20px 0 #5d4037,
+            0 20px 0 #4e342e,
+            10px 20px 0 #6d4c41,
+            -20px 20px 0 #3e2723,
+            20px 20px 0 #3e2723,
+            -10px 10px 0 #d32f2f,
+            0 10px 0 #d32f2f,
+            10px 10px 0 #d32f2f,
+            -10px 0 0 #f57c00,
+            0 -5px 0 #f57c00,
+            10px 0 0 #f57c00,
+            0 -20px 0 #fff176,
+            -5px -15px 0 #ffca28,
+            5px -15px 0 transparent;
+        }
+      }
+
+      .spark {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #ffeb3b;
+        opacity: 0;
+        animation: flyUp 2s infinite;
+      }
+      @keyframes flyUp {
+        0% {
+          top: 0;
+          opacity: 1;
+        }
+        100% {
+          top: -50px;
+          opacity: 0;
+          transform: translateX(10px);
+        }
+      }
+
+      .link-box {
+        padding: 8px 16px; /* Μίκρυνα λίγο το κουμπί */
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid #ffccbc;
+        border-radius: 8px;
+        color: #ffccbc;
+        text-decoration: none;
+        font-family: "Courier New", monospace;
+        font-size: 0.8rem;
+        transition: background 0.3s;
+      }
+      .link-box:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 0.6rem;
+        background: white;
+        color: #ccc;
+        border-top: var(--border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="snowflake" style="left: 10%; animation-duration: 5s"></div>
+    <div
+      class="snowflake"
+      style="left: 30%; animation-duration: 7s; animation-delay: 1s"
+    ></div>
+    <div
+      class="snowflake"
+      style="left: 70%; animation-duration: 6s; animation-delay: 2s"
+    ></div>
+    <div class="snowflake" style="left: 90%; animation-duration: 8s"></div>
+
+    <header>
+      <h1>WELCOME TO FLORINA</h1>
+      <div class="subtitle">• NORTH GREECE •</div>
+    </header>
+
+    <div style="text-align: center; margin: 40px 0">
+      <a href="map.html" class="btn">🗺️ OPEN RPG MAP</a>
+    </div>
+
+    <div class="container">
+      <div class="card">
+        <span class="card-title">INFO</span>
+        <span class="pixel-img">🏔️</span>
+        <p>Η Φλώρινα είναι η πόλη των τεχνών και του χιονιού.</p>
+        <p>STATUS: <span style="color: var(--accent)">VERY COLD</span></p>
+      </div>
+
+      <div class="river-divider"></div>
+
+      <div class="card">
+        <span class="card-title">ARCTUROS</span>
+        <span class="pixel-img">🐻</span>
+        <p>
+          Στο Νυμφαίο, λίγο έξω από την πόλη, ζουν οι προστατευόμενες αρκούδες.
+        </p>
+        <div style="margin-top: 20px">
+          <a href="https://www.arcturos.gr/" target="_blank" class="btn"
+            >VISIT BEARS</a
+          >
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="card-title">GASTRONOMY</span>
+        <span class="pixel-img">🌶️</span>
+        <p>
+          Μην φύγεις αν δεν δοκιμάσεις τις διάσημες κόκκινες πιπεριές Φλωρίνης!
+        </p>
+        <p>TASTE: <span style="color: var(--accent)">SWEET & SPICY</span></p>
+      </div>
+
+      <div class="card">
+        <span class="card-title">TRADITIONS</span>
+        <span class="pixel-img">🎺</span>
+        <p>Μία πόλη με πλούσια παράδοση, ήθη και έθιμα.</p>
+        <p>VIBE: <span style="color: var(--accent)">FESTIVE</span></p>
+      </div>
+
+      <div class="card">
+        <span class="card-title">CINEMA</span>
+        <span class="pixel-img">🎬</span>
+        <p>Το αγαπημένο κινηματογραφικό σκηνικό του Θόδωρου Αγγελόπουλου.</p>
+        <p>MOOD: <span style="color: var(--accent)">NOSTALGIC</span></p>
+      </div>
+
+      <div class="card">
+        <span class="card-title">RARE SPECIES</span>
+        <span class="pixel-img">🐱</span>
+        <p>
+          Στα βουνά της περιοχής ζει το "Φάντασμα των Βαλκανίων", ο σπάνιος
+          Βαλκανικός Λύγκας. Απειλούμενο είδος που προστατεύεται αυστηρά.
+        </p>
+        <p>RARITY: <span style="color: #e91e63">LEGENDARY</span></p>
+      </div>
+
+      <div class="card">
+        <span class="card-title">LOCAL PRODUCT</span>
+        <span class="pixel-img">🫘</span>
+        <p>
+          Οι Πρέσπες παράγουν τα διάσημα φασόλια "Γίγαντες-Ελέφαντες" (Π.Ο.Π.).
+          Είναι πεντανόστιμα και βραβευμένα παγκοσμίως.
+        </p>
+        <p>ENERGY: <span style="color: #4caf50">+50 HEALTH</span></p>
+      </div>
+
+      <div class="card">
+        <span class="card-title">THE RECORD</span>
+        <span class="pixel-img">🌡️</span>
+        <p>
+          Η Φλώρινα είναι η "επίσημη παγωνιέρα" της Ελλάδας. Έχει καταγραφεί
+          ιστορικό ρεκόρ θερμοκρασίας στους -29°C!
+        </p>
+        <p>DANGER: <span style="color: #2196f3">FROSTBITE</span></p>
+      </div>
+    </div>
+
+    <div class="night-section">
+      <h2>Fire Ritual (Koleda)</h2>
+
+      <p class="fire-desc">
+        Experience the traditional fire ritual of Florina, that takes place
+        every year on December 23rd, where the warmth of the flames brings the
+        community together on cold winter nights.
+      </p>
+
+      <div class="fire-container">
+        <div class="pixel-fire"></div>
+        <div class="spark" style="left: 10px; animation-delay: 0.2s"></div>
+        <div class="spark" style="left: 30px; animation-delay: 0.5s"></div>
+        <div class="spark" style="left: 50px; animation-delay: 0.8s"></div>
+      </div>
+
+      <a
+        href="https://www.sansimera.gr/articles/1355"
+        target="_blank"
+        class="link-box"
+      >
+        LEARN MORE
+      </a>
+    </div>
+
+    <footer>© 2026 Pixel Florina Project</footer>
+
+    <div
+      id="secret-bear"
+      style="
+        position: fixed;
+        bottom: 20px;
+        left: -100px;
+        font-size: 4rem;
+        transition: left 3s linear;
+        z-index: 999;
+      "
+    >
+      🐻
+    </div>
+
+    <script>
+      document.addEventListener("keydown", function (event) {
+        // Αν πατηθεί το πλήκτρο 'B' ή 'b'
+        if (event.key === "b" || event.key === "B") {
+          const bear = document.getElementById("secret-bear");
+
+          // Η αρκούδα ξεκινάει
+          bear.style.left = "110vw"; // Πάει τέρμα δεξιά
+
+          // Μετά από 3 δευτερόλεπτα (όσο διαρκεί το τρέξιμο), την ξαναβάζουμε στην αρχή
+          setTimeout(() => {
+            bear.style.transition = "none"; // Κόβουμε το animation για να γυρίσει αμέσως πίσω κρυφά
+            bear.style.left = "-100px";
+
+            // Ξαναενεργοποιούμε το animation για την επόμενη φορά
+            setTimeout(() => {
+              bear.style.transition = "left 3s linear";
+            }, 100);
+          }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>
