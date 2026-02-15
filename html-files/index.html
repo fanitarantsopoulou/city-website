@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +18,9 @@
             --shadow: 8px 8px 0px #2c3e50;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -45,201 +48,490 @@
             z-index: 9999;
             transition: transform 0.1s;
         }
-        .menu-toggle:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #000; }
-        .menu-toggle:hover { background: #ff8a80; }
+
+        .menu-toggle:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .menu-toggle:hover {
+            background: #ff8a80;
+        }
 
         .sidebar {
             position: fixed;
             top: 0;
-            left: -320px; /* Κρυμμένο αριστερά */
+            left: -320px;
+            /* Κρυμμένο αριστερά */
             width: 300px;
             height: 100vh;
             background: #fff;
             border-right: var(--border);
-            box-shadow: 10px 0 0 rgba(0,0,0,0.2);
+            box-shadow: 10px 0 0 rgba(0, 0, 0, 0.2);
             padding: 20px;
             display: flex;
             flex-direction: column;
             transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 10000;
         }
-        .sidebar.active { left: 0; }
+
+        .sidebar.active {
+            left: 0;
+        }
 
         .sidebar-header {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 4px solid #000; padding-bottom: 15px; margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
         }
-        .sidebar-title { font-size: 1rem; color: var(--text-color); }
+
+        .sidebar-title {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
 
         .close-btn {
-            background: #ff5252; color: white; border: 2px solid #000;
-            font-family: inherit; cursor: pointer; padding: 5px 8px; box-shadow: 2px 2px 0 #000;
+            background: #ff5252;
+            color: white;
+            border: 2px solid #000;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 5px 8px;
+            box-shadow: 2px 2px 0 #000;
         }
-        .close-btn:hover { transform: scale(1.1); }
 
-        .menu-list { list-style: none; padding: 0; }
-        .menu-item { margin-bottom: 20px; }
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 20px;
+        }
+
         .menu-link {
-            text-decoration: none; color: var(--text-color); font-size: 0.7rem;
-            display: block; padding: 10px; border: 2px solid transparent;
-            transition: all 0.2s; position: relative; cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.7rem;
+            display: block;
+            padding: 10px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
         }
+
         .menu-link:hover {
-            background: #e0f7fa; border: 2px solid #2c3e50;
-            box-shadow: 4px 4px 0 #2c3e50; transform: translateX(5px);
+            background: #e0f7fa;
+            border: 2px solid #2c3e50;
+            box-shadow: 4px 4px 0 #2c3e50;
+            transform: translateX(5px);
         }
-        .menu-link::before { content: '►'; position: absolute; left: -15px; opacity: 0; transition: opacity 0.2s; color: var(--accent); }
-        .menu-link:hover::before { opacity: 1; }
-        .pixel-decor { margin-top: auto; text-align: center; font-size: 2rem; opacity: 0.5; }
+
+        .menu-link::before {
+            content: '►';
+            position: absolute;
+            left: -15px;
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: var(--accent);
+        }
+
+        .menu-link:hover::before {
+            opacity: 1;
+        }
+
+        .pixel-decor {
+            margin-top: auto;
+            text-align: center;
+            font-size: 2rem;
+            opacity: 0.5;
+        }
 
         /* --- MODAL STYLES (POP-UPS) --- */
         .pixel-modal {
-            display: none; position: fixed; z-index: 20000; left: 0; top: 0;
-            width: 100%; height: 100%; background-color: rgba(0,0,0,0.7);
+            display: none;
+            position: fixed;
+            z-index: 20000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(2px);
         }
+
         .modal-content {
-            background-color: #fff; margin: 10% auto; padding: 20px;
-            border: 4px solid #2c3e50; width: 80%; max-width: 500px;
-            box-shadow: 10px 10px 0 #000; position: relative;
-            font-family: 'Press Start 2P', cursive; text-align: left;
-            max-height: 80vh; overflow-y: auto;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border: 4px solid #2c3e50;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 10px 10px 0 #000;
+            position: relative;
+            font-family: 'Press Start 2P', cursive;
+            text-align: left;
+            max-height: 80vh;
+            overflow-y: auto;
         }
+
         .modal-header {
-            background: #2c3e50; color: #fff; padding: 10px;
-            margin: -20px -20px 20px -20px; display: flex;
-            justify-content: space-between; align-items: center; border-bottom: 4px solid #000;
+            background: #2c3e50;
+            color: #fff;
+            padding: 10px;
+            margin: -20px -20px 20px -20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 4px solid #000;
         }
-        .suggestion-list { list-style: none; padding: 0; }
+
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+        }
+
         .suggestion-item {
-            background: #f5f5f5; border: 2px solid #ccc; padding: 10px;
-            margin-bottom: 10px; font-size: 0.7rem; line-height: 1.5;
+            background: #f5f5f5;
+            border: 2px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 0.7rem;
+            line-height: 1.5;
         }
-        .suggestion-item strong { color: #ff6b6b; display: block; margin-bottom: 5px; }
+
+        .suggestion-item strong {
+            color: #ff6b6b;
+            display: block;
+            margin-bottom: 5px;
+        }
+
         .close-modal-btn {
-            background: #ff5252; color: white; border: 2px solid #fff;
-            cursor: pointer; font-family: inherit; padding: 5px 10px;
+            background: #ff5252;
+            color: white;
+            border: 2px solid #fff;
+            cursor: pointer;
+            font-family: inherit;
+            padding: 5px 10px;
         }
-        .close-modal-btn:hover { transform: scale(1.1); }
+
+        .close-modal-btn:hover {
+            transform: scale(1.1);
+        }
 
 
         /* --- HEADER & MAIN --- */
         header {
-            text-align: center; padding: 40px 20px;
+            text-align: center;
+            padding: 40px 20px;
             background: linear-gradient(180deg, #b2ebf2 0%, #e0f7fa 100%);
             border-bottom: var(--border);
         }
-        h1 { font-size: 1.5rem; margin-bottom: 10px; text-shadow: 3px 3px 0px #fff; }
-        .subtitle { font-size: 0.7rem; color: #546e7a; }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px #fff;
+        }
+
+        .subtitle {
+            font-size: 0.7rem;
+            color: #546e7a;
+        }
 
         .btn {
-            display: inline-block; background: var(--accent); color: white;
-            text-decoration: none; padding: 12px 20px; font-size: 0.8rem;
-            border: 2px solid #2c3e50; box-shadow: 4px 4px 0px #2c3e50;
-            cursor: pointer; text-align: center;
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 0.8rem;
+            border: 2px solid #2c3e50;
+            box-shadow: 4px 4px 0px #2c3e50;
+            cursor: pointer;
+            text-align: center;
         }
-        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #2c3e50; }
+
+        .btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #2c3e50;
+        }
 
         .container {
-            max-width: 800px; margin: 0 auto; padding: 20px;
-            position: relative; z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
         /* --- FLIP CARDS --- */
         .flip-card-container {
-            background-color: transparent; width: 100%; height: 320px;
-            perspective: 1000px; margin-bottom: 40px;
+            background-color: transparent;
+            width: 100%;
+            height: 320px;
+            perspective: 1000px;
+            margin-bottom: 40px;
         }
+
         .flip-card-inner {
-            position: relative; width: 100%; height: 100%; text-align: left;
-            transition: transform 0.8s; transform-style: preserve-3d;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: left;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
         }
-        .flipped { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back {
-            position: absolute; width: 100%; height: 100%;
-            -webkit-backface-visibility: hidden; backface-visibility: hidden;
-            background: var(--card-bg); border: var(--border);
-            box-shadow: var(--shadow); padding: 25px;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: flex-start;
+
+        .flipped {
+            transform: rotateY(180deg);
         }
+
+        .flip-card-front,
         .flip-card-back {
-            background-color: #fff9c4; transform: rotateY(180deg);
-            align-items: center; text-align: center;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: var(--card-bg);
+            border: var(--border);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
         }
+
+        .flip-card-back {
+            background-color: #fff9c4;
+            transform: rotateY(180deg);
+            align-items: center;
+            text-align: center;
+        }
+
         .card-title {
-            background: var(--text-color); color: white; padding: 8px 15px;
-            display: inline-block; font-size: 0.9rem; margin-bottom: 15px;
+            background: var(--text-color);
+            color: white;
+            padding: 8px 15px;
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
         }
-        .pixel-img { font-size: 3.5rem; display: block; margin: 15px auto; text-align: center; width: 100%; }
-        p { font-size: 0.8rem; margin-bottom: 15px; }
+
+        .pixel-img {
+            font-size: 3.5rem;
+            display: block;
+            margin: 15px auto;
+            text-align: center;
+            width: 100%;
+        }
+
+        p {
+            font-size: 0.8rem;
+            margin-bottom: 15px;
+        }
 
         /* --- PIXEL ARROW --- */
         .pixel-arrow {
-            position: absolute; bottom: 15px; right: 15px; width: 40px; height: 40px;
-            background: var(--accent); border: 4px solid #2c3e50; cursor: pointer;
-            box-shadow: 4px 4px 0 #2c3e50; display: flex; align-items: center;
-            justify-content: center; transition: transform 0.2s;
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border: 4px solid #2c3e50;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 #2c3e50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
         }
+
         .arrow-icon {
-            width: 0; height: 0; border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent; border-left: 10px solid white;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-left: 10px solid white;
         }
+
         .arrow-icon-back {
-            width: 0; height: 0; border-top: 8px solid transparent;
-            border-bottom: 8px solid transparent; border-right: 10px solid white;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 10px solid white;
         }
-        .pixel-arrow:hover { transform: scale(1.2); background: #ff8a80; }
+
+        .pixel-arrow:hover {
+            transform: scale(1.2);
+            background: #ff8a80;
+        }
 
         /* --- RIVER DIVIDER --- */
         .river-divider {
-            height: 20px; background: var(--river); margin: 50px 0;
-            border-top: 4px solid #2c3e50; border-bottom: 4px solid #2c3e50;
+            height: 20px;
+            background: var(--river);
+            margin: 50px 0;
+            border-top: 4px solid #2c3e50;
+            border-bottom: 4px solid #2c3e50;
             position: relative;
         }
+
         .river-divider::after {
-            content: "RIVER SAKOULEVAS"; position: absolute;
-            top: -25px; left: 50%; transform: translateX(-50%);
-            font-size: 0.5rem; background: white; padding: 2px 5px; border: 2px solid #2c3e50;
+            content: "RIVER SAKOULEVAS";
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.5rem;
+            background: white;
+            padding: 2px 5px;
+            border: 2px solid #2c3e50;
         }
 
         /* --- NIGHT SECTION --- */
         .night-section {
-            background-color: #1a1a2e; color: #ffccbc; padding: 30px 20px;
-            margin-top: 40px; border-top: 4px solid #2c3e50;
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: center; gap: 15px; text-align: center;
+            background-color: #1a1a2e;
+            color: #ffccbc;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 4px solid #2c3e50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-align: center;
         }
-        .night-section h2 { margin: 0; font-size: 1.4rem; color: #ffccbc; }
+
+        .night-section h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            color: #ffccbc;
+        }
+
         .fire-desc {
-            text-align: center !important; width: 100%; max-width: 900px;
-            margin: 0 auto; line-height: 1.6; font-size: 0.75rem; color: #ffab91; display: block;
+            text-align: center !important;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-size: 0.75rem;
+            color: #ffab91;
+            display: block;
         }
-        .fire-container { position: relative; width: 50px; height: 50px; margin-bottom: 20px; }
+
+        .fire-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            margin-bottom: 20px;
+        }
+
         .pixel-fire {
-            width: 10px; height: 10px; background: transparent; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: transparent;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             box-shadow: -10px 20px 0 #5d4037, 0 20px 0 #4e342e, 10px 20px 0 #6d4c41, -20px 20px 0 #3e2723, 20px 20px 0 #3e2723, -10px 10px 0 #d32f2f, 0 10px 0 #d32f2f, 10px 10px 0 #d32f2f, -10px 0 0 #f57c00, 0 0 0 #f57c00, 10px 0 0 #f57c00, 0 -10px 0 #ffeb3b, -10px -10px 0 #ffca28, 10px -10px 0 #ffca28;
             animation: burn 0.8s infinite alternate;
         }
+
         @keyframes burn {
-            0% { transform: translateX(-50%) translateY(0); box-shadow: -10px 20px 0 #5d4037, 0 20px 0 #4e342e, 10px 20px 0 #6d4c41, -20px 20px 0 #3e2723, 20px 20px 0 #3e2723, -10px 10px 0 #d32f2f, 0 10px 0 #d32f2f, 10px 10px 0 #d32f2f, -10px 0 0 #f57c00, 0 0 0 #f57c00, 10px 0 0 #f57c00, 0 -10px 0 #ffeb3b, -10px -10px 0 #ffca28, 10px -10px 0 #ffca28; }
-            100% { transform: translateX(-50%) translateY(-2px); box-shadow: -10px 20px 0 #5d4037, 0 20px 0 #4e342e, 10px 20px 0 #6d4c41, -20px 20px 0 #3e2723, 20px 20px 0 #3e2723, -10px 10px 0 #d32f2f, 0 10px 0 #d32f2f, 10px 10px 0 #d32f2f, -10px 0 0 #f57c00, 0 -5px 0 #f57c00, 10px 0 0 #f57c00, 0 -20px 0 #fff176, -5px -15px 0 #ffca28, 5px -15px 0 transparent; }
+            0% {
+                transform: translateX(-50%) translateY(0);
+                box-shadow: -10px 20px 0 #5d4037, 0 20px 0 #4e342e, 10px 20px 0 #6d4c41, -20px 20px 0 #3e2723, 20px 20px 0 #3e2723, -10px 10px 0 #d32f2f, 0 10px 0 #d32f2f, 10px 10px 0 #d32f2f, -10px 0 0 #f57c00, 0 0 0 #f57c00, 10px 0 0 #f57c00, 0 -10px 0 #ffeb3b, -10px -10px 0 #ffca28, 10px -10px 0 #ffca28;
+            }
+
+            100% {
+                transform: translateX(-50%) translateY(-2px);
+                box-shadow: -10px 20px 0 #5d4037, 0 20px 0 #4e342e, 10px 20px 0 #6d4c41, -20px 20px 0 #3e2723, 20px 20px 0 #3e2723, -10px 10px 0 #d32f2f, 0 10px 0 #d32f2f, 10px 10px 0 #d32f2f, -10px 0 0 #f57c00, 0 -5px 0 #f57c00, 10px 0 0 #f57c00, 0 -20px 0 #fff176, -5px -15px 0 #ffca28, 5px -15px 0 transparent;
+            }
         }
-        .spark { position: absolute; width: 4px; height: 4px; background: #ffeb3b; opacity: 0; animation: flyUp 2s infinite; }
-        @keyframes flyUp { 0% { top: 0; opacity: 1; } 100% { top: -50px; opacity: 0; transform: translateX(10px); } }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffeb3b;
+            opacity: 0;
+            animation: flyUp 2s infinite;
+        }
+
+        @keyframes flyUp {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+
+            100% {
+                top: -50px;
+                opacity: 0;
+                transform: translateX(10px);
+            }
+        }
 
         .link-box {
-            padding: 8px 16px; background: rgba(255, 255, 255, 0.1); border: 1px solid #ffccbc;
-            border-radius: 8px; color: #ffccbc; text-decoration: none; font-family: "Courier New", monospace;
-            font-size: 0.8rem; transition: background 0.3s;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffccbc;
+            border-radius: 8px;
+            color: #ffccbc;
+            text-decoration: none;
+            font-family: "Courier New", monospace;
+            font-size: 0.8rem;
+            transition: background 0.3s;
         }
-        .link-box:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
 
-        footer { text-align: center; padding: 20px; font-size: 0.6rem; background: white; color: #ccc; border-top: var(--border); }
-        .snowflake { position: fixed; top: -10px; background: white; width: 8px; height: 8px; border: 1px solid #2c3e50; z-index: 1; pointer-events: none; animation: fall linear infinite; }
-        @keyframes fall { to { transform: translateY(105vh); } }
+        .link-box:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.6rem;
+            background: white;
+            color: #ccc;
+            border-top: var(--border);
+        }
+
+        .snowflake {
+            position: fixed;
+            top: -10px;
+            background: white;
+            width: 8px;
+            height: 8px;
+            border: 1px solid #2c3e50;
+            z-index: 1;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(105vh);
+            }
+        }
     </style>
 </head>
+
 <body>
 
     <div class="snowflake" style="left: 10%; animation-duration: 5s"></div>
@@ -321,8 +613,20 @@
                 </li>
                 <li class="suggestion-item">
                     <strong>Λαϊκή Αγορά (Τετάρτη)</strong>
-                    Πήγαινε νωρίς για φρέσκες πιπεριές και φασόλια.
+                    Πήγαινε νωρίς για φρέσκα φρούτα και λαχανικά από τοπικούς παραγωγούς.
                 </li>
+                <li class="suggestion-item">
+                    <strong>Πανηγύρια</strong>
+                    Αν τύχει να είσαι στη Φλώρινα καλοκαίρι, ψάξε για τοπικό πανηγύρι στα χωριά.
+                </li>
+                <li class="suggestion-item">
+                    <strong>Παραδοσιακές Ταβέρνες</strong>
+                    Πήγαινε σε τοπικές ταβέρνες στην πόλη και στα γύρω χωριά για τοπικές γεύσεις και αυθεντική
+                    ατμόσφαιρα.
+                    <button class="btn" onclick="openModal('modal-taverns')"
+                        style="font-size:0.6rem; margin-bottom:10px; font-family: 'Press Start 2P', cursive;">SUGGESTIONS</button>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -336,17 +640,56 @@
             <ul class="suggestion-list">
                 <li class="suggestion-item">
                     <strong>Φωτιές (23 Δεκ)</strong>
-                    Η πόλη καίγεται και κερνάνε φασολάδα. Μοναδικό έθιμο.
+                    Φωτιές ανάβουν σε διάφορα σημεία της πόλης. Ένα έθιμο που φέρνει ζεστασιά και κοινότητα στις
+                    παγωμένες νύχτες του χειμώνα.
                 </li>
                 <li class="suggestion-item">
-                    <strong>Ραγουτσάρια</strong>
-                    Το Ιανουάριο, το μεγάλο καρναβάλι της γειτονικής Καστοριάς.
+                    <strong>Πανηγύρια</strong>
+                    Η Φλώρινα φημίζεται για τα παραδοσιακά της πανηγύρια που γίνονται σε διάφορα χωριά της περιοχής,
+                    ιδιαίτερα κατά τους καλοκαιρινούς μήνες.
                 </li>
                 <li class="suggestion-item">
                     <strong>Χάλκινα</strong>
-                    Οι τοπικές μπάντες με τα πνευστά είναι η ψυχή της γιορτής.
+                    Οι τοπικές μπάντες με τα πνευστά είναι η ψυχή της γιορτής. Παρόντες στα πανηγύρια, προσφέρουν
+                    ζωντανή μουσική που σε κάνει να χορεύεις μέχρι το πρωί.
                 </li>
             </ul>
+        </div>
+    </div>
+
+    <div id="modal-taverns" class="pixel-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>🍗 TOP TAVERNS</span>
+                <button class="close-modal-btn" onclick="closeModal('modal-taverns')">X</button>
+            </div>
+
+            <ul class="suggestion-list">
+                <li class="suggestion-item">
+                    <strong>Ο Θωμάς (Σκλήθρο)</strong>
+                    Διάσημη ταβέρνα σε όλη την Ελλάδα. Λίγο έξω από τη Φλώρινα, αλλά αξίζει τη διαδρομή.
+                </li>
+
+                <li class="suggestion-item">
+                    <strong>Κοντοσώρος (Ξινό Νερό)</strong>
+                    Γκουρμέ τοπικές γεύσεις σε ένα υπέροχο χωριό. Δοκίμασε το ριζότο με μανιτάρια.
+                </li>
+
+                <li class="suggestion-item">
+                    <strong>Αποστακτήριο (Πόλη)</strong>
+                    Μέσα στην πόλη της Φλώρινας. Ωραίο τσίπουρο και μεζέδες δίπλα στο ποτάμι.
+                </li>
+
+                <li class="suggestion-item">
+                    <strong>Πρέσπες (Άγιος Γερμανός)</strong>
+                    Αν πας στις Πρέσπες, ψάξε για ταβέρνες στον Άγιο Γερμανό για φασολάδα και γριβάδι.
+                </li>
+            </ul>
+
+            <div style="text-align:center; margin-top:15px;">
+                <button class="btn" onclick="closeModal('modal-taverns')"
+                    style="background:#ccc; color:#000; font-family: 'Press Start 2P', cursive;">CLOSE</button>
+            </div>
         </div>
     </div>
 
@@ -368,12 +711,16 @@
                     <span class="pixel-img">🏔️</span>
                     <p>Η Φλώρινα είναι η πόλη των τεχνών και του χιονιού.</p>
                     <p>STATUS: <span style="color: var(--accent)">VERY COLD</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">STATS</span>
                     <p>Πληθυσμός: 17.188<br>Υψόμετρο: 687 μ.<br></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -386,13 +733,18 @@
                     <span class="card-title">ARCTUROS</span>
                     <span class="pixel-img">🐻</span>
                     <p>Στο Νυμφαίο, λίγο έξω από την πόλη, ζουν οι προστατευόμενες αρκούδες.</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">DETAILS</span>
                     <p>Το καταφύγιο φιλοξενεί αρκούδες και λύκους.</p>
-                    <a href="https://www.arcturos.gr/" target="_blank" class="btn" style="font-size:0.6rem; margin-bottom:10px;">VISIT BEARS</a>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <a href="https://www.arcturos.gr/" target="_blank" class="btn"
+                        style="font-size:0.6rem; margin-bottom:10px;">VISIT BEARS</a>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -404,12 +756,18 @@
                     <span class="pixel-img">🌶️</span>
                     <p>Μην φύγεις αν δεν δοκιμάσεις τις διάσημες κόκκινες πιπεριές Φλωρίνης!</p>
                     <p>TASTE: <span style="color: var(--accent)">SWEET & SPICY</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">MENU TIPS</span>
                     <p>1. Κεμπάπια Φλωρίνης<br>2. Πιπεριές Γεμιστές<br>3. Φασόλια Πρεσπών</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <a href="https://www.visitgreece.gr/el/experiences/gastronomy/traditional-products/florinas-gastronomy/"
+                        target="_blank" class="btn" style="font-size:0.6rem; margin-bottom:10px;">VIEW</a>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -421,12 +779,17 @@
                     <span class="pixel-img">🎺</span>
                     <p>Μία πόλη με πλούσια παράδοση, ήθη και έθιμα.</p>
                     <p>VIBE: <span style="color: var(--accent)">FESTIVE</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
-                    <span class="card-title">SOUNDS</span>
+                    <a href="https://www.youtube.com/watch?v=QKDnoQNwMY4&list=RDQKDnoQNwMY4&start_radio=1"
+                        target="_blank" class="btn" style="font-size:0.6rem; margin-bottom:10px;">SOUNDS</a>
                     <p>Οι μπάντες με τα χάλκινα είναι η ψυχή της πόλης σε κάθε γιορτή και πανηγύρι.</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -438,12 +801,16 @@
                     <span class="pixel-img">🎬</span>
                     <p>Το αγαπημένο κινηματογραφικό σκηνικό του Θόδωρου Αγγελόπουλου.</p>
                     <p>MOOD: <span style="color: var(--accent)">NOSTALGIC</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">FILMS</span>
                     <p>Εδώ γυρίστηκαν:<br>- Το Μετέωρο Βήμα του Πελαργού<br>- Τοπίο στην Ομίχλη</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -452,15 +819,19 @@
             <div class="flip-card-inner">
                 <div class="flip-card-front">
                     <span class="card-title">RARE SPECIES</span>
-                    <span class="pixel-img">🐱</span>
+                    <span class="pixel-img">😼</span>
                     <p>Στα βουνά της περιοχής ζει ο σπάνιος Βαλκανικός Λύγκας.</p>
                     <p>RARITY: <span style="color: #e91e63">LEGENDARY</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
-                    <span class="card-title">INFO</span>
+                    <a href="https://neaflorina.gr/2021/09/lygkas-o-agnostos-tigris-tis-eyropis-sto-kentro-prostasias-toy-arktoyroy-video-pics/" target="_blank" class="btn" style="font-size:0.6rem; margin-bottom:10px;">INFO</a>
                     <p>Είναι ένα από τα πιο απειλούμενα είδη στην Ευρώπη. Ζει στα πυκνά δάση.</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -472,12 +843,16 @@
                     <span class="pixel-img">🫘</span>
                     <p>Οι Πρέσπες παράγουν τα διάσημα φασόλια "Γίγαντες-Ελέφαντες" (Π.Ο.Π.).</p>
                     <p>ENERGY: <span style="color: #4caf50">+50 HEALTH</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">COOKING</span>
                     <p>Η καλύτερη συνταγή είναι "Φασόλια Γίγαντες στο φούρνο" με σάλτσα ντομάτας.</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -489,12 +864,16 @@
                     <span class="pixel-img">🌡️</span>
                     <p>Η Φλώρινα είναι η "επίσημη παγωνιέρα" της Ελλάδας.</p>
                     <p>DANGER: <span style="color: #2196f3">FROSTBITE</span></p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon"></div>
+                    </div>
                 </div>
                 <div class="flip-card-back">
                     <span class="card-title">HISTORY</span>
                     <p>Θερμοκρασίες που φτάνουν πολύ χαμηλά. Ντύσου ζεστά! 🧅</p>
-                    <div class="pixel-arrow" onclick="flip(this)"><div class="arrow-icon-back"></div></div>
+                    <div class="pixel-arrow" onclick="flip(this)">
+                        <div class="arrow-icon-back"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -502,34 +881,36 @@
     </div>
 
     <div class="night-section">
-      <h2>Fire Ritual (Koleda)</h2>
+        <h2>Fire Ritual (Koleda)</h2>
 
-      <p class="fire-desc">
-        Experience the traditional fire ritual of Florina, that takes place
-        every year on December 23rd, where the warmth of the flames brings the
-        community together on cold winter nights.
-      </p>
+        <p class="fire-desc">
+            Experience the traditional fire ritual of Florina, that takes place
+            every year on December 23rd, where the warmth of the flames brings the
+            community together on cold winter nights.
+        </p>
 
-      <div class="fire-container">
-        <div class="pixel-fire"></div>
-        <div class="spark" style="left: 10px; animation-delay: 0.2s"></div>
-        <div class="spark" style="left: 30px; animation-delay: 0.5s"></div>
-        <div class="spark" style="left: 50px; animation-delay: 0.8s"></div>
-      </div>
+        <div class="fire-container">
+            <div class="pixel-fire"></div>
+            <div class="spark" style="left: 10px; animation-delay: 0.2s"></div>
+            <div class="spark" style="left: 30px; animation-delay: 0.5s"></div>
+            <div class="spark" style="left: 50px; animation-delay: 0.8s"></div>
+        </div>
 
-      <a href="https://www.sansimera.gr/articles/1355" target="_blank" class="link-box">LEARN MORE</a>
+        <a href="https://www.sansimera.gr/articles/1355" target="_blank" class="link-box">LEARN MORE</a>
     </div>
 
     <footer>© 2026 Pixel Florina Project</footer>
 
-    <div id="secret-bear" style="position: fixed; bottom: 20px; left: -100px; font-size: 4rem; transition: left 3s linear; z-index: 999;">🐻</div>
+    <div id="secret-bear"
+        style="position: fixed; bottom: 20px; left: -100px; font-size: 4rem; transition: left 3s linear; z-index: 999;">
+        🐻</div>
 
     <script>
         // --- SIDEBAR FUNCTION ---
         function toggleSidebar() {
             const sidebar = document.getElementById('mySidebar');
             const btn = document.querySelector('.menu-toggle');
-            
+
             sidebar.classList.toggle('active');
 
             if (sidebar.classList.contains('active')) {
@@ -552,7 +933,7 @@
         }
 
         // Κλείσιμο αν πατήσεις έξω από το κουτί
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target.classList.contains('pixel-modal')) {
                 event.target.style.display = "none";
             }
@@ -579,5 +960,6 @@
             cardInner.classList.toggle('flipped');
         }
     </script>
-  </body>
+</body>
+
 </html>
