@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <title>Arcturos Surveillance 🎥</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --monitor-green: #33ff33;
+            --danger-red: #ff3333;
+            --dark-metal: #1a1a1a;
+        }
+
+        body {
+            background-color: #050505;
+            color: var(--monitor-green);
+            font-family: 'Press Start 2P', cursive;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* --- MONITOR FRAME --- */
+        .cctv-setup {
+            position: relative;
+            width: 850px;
+            height: 550px;
+            background: #222;
+            border: 15px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 240px;
+            gap: 20px;
+            box-shadow: inset 0 0 100px #000;
+        }
+
+        /* --- THE SCREEN --- */
+        .screen-container {
+            position: relative;
+            background: #000;
+            border: 4px solid #444;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        /* Pure CSS Static Noise */
+        .noise {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 5;
+            opacity: 0.1;
+            pointer-events: none; /* ΣΗΜΑΝΤΙΚΟ: Επιτρέπει τα κλικ από κάτω */
+            background: repeating-radial-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 0/2500px 2500px,
+                        repeating-conic-gradient(#000 0 0.0001%,#fff 0 0.0002%) 50% 50%/2500px 2500px;
+            background-blend-mode: difference;
+            animation: shift .2s infinite alternate;
+        }
+        @keyframes shift { 100% { background-position: 50% 0, 50% 50%; } }
+
+        .cam-label {
+            position: absolute;
+            top: 15px; left: 15px;
+            font-size: 0.6rem;
+            z-index: 10;
+            background: rgba(0,0,0,0.7);
+            padding: 5px;
+        }
+
+        #camera-view {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(1) brightness(0.7) contrast(1.2);
+            transition: opacity 0.3s;
+        }
+
+        /* THE BEAR (Target) */
+        #bear-target {
+            position: absolute;
+            font-size: 3.5rem;
+            display: none;
+            z-index: 100; /* Πάνω από όλα για να πατιέται */
+            cursor: pointer;
+            user-select: none;
+            animation: bear-float 2s infinite ease-in-out;
+        }
+        @keyframes bear-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- CONTROLS --- */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            border-left: 4px solid #333;
+            padding-left: 15px;
+        }
+
+        .cam-btn {
+            background: #2a2a2a;
+            color: #555;
+            border: 3px solid #444;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 0.5rem;
+            cursor: pointer;
+            text-align: left;
+            transition: 0.2s;
+        }
+
+        .cam-btn:hover { background: #333; color: #fff; }
+
+        .cam-btn.active {
+            color: var(--monitor-green);
+            border-color: var(--monitor-green);
+            background: #152515;
+        }
+
+        .score-board {
+            margin-top: auto;
+            border: 2px solid var(--monitor-green);
+            padding: 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            background: #0a0a0a;
+        }
+
+        .ui-btn {
+            background: #444;
+            color: white;
+            border: 2px solid #000;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 0.5rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+        .ui-btn:hover { background: var(--danger-red); }
+    </style>
+</head>
+<body>
+
+    <h2 style="font-size: 0.9rem; margin-bottom: 20px;">SYSTEM: ACTIVE SURVEILLANCE</h2>
+
+    <div class="cctv-setup">
+        <div class="screen-container">
+            <div class="noise"></div>
+            <div class="cam-label" id="cam-name">CAM 01</div>
+            <img id="camera-view" src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800">
+            <div id="bear-target" onclick="tagBear()">🐻</div>
+        </div>
+
+        <div class="controls">
+            <button class="cam-btn active" onclick="changeCam(0, this)">CAM 01: FOREST</button>
+            <button class="cam-btn" onclick="changeCam(1, this)">CAM 02: MOUNTAIN</button>
+            <button class="cam-btn" onclick="changeCam(2, this)">CAM 03: RIVER</button>
+            <button class="cam-btn" onclick="changeCam(3, this)">CAM 04: SANCTUARY</button>
+
+            <div class="score-board">
+                XP: <span id="score">0</span><br>
+                <div id="status-msg" style="margin-top:10px; font-size: 0.5rem; color: #444;">SCANNING...</div>
+            </div>
+
+            <a href="index.html" class="ui-btn">TERMINATE</a>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentCam = 0;
+        const bear = document.getElementById('bear-target');
+        const statusMsg = document.getElementById('status-msg');
+
+        const cameras = [
+            { name: "CAM 01", img: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800" },
+            { name: "CAM 02", img: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800" },
+            { name: "CAM 03", img: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=800" },
+            { name: "CAM 04", img: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800" }
+        ];
+
+        function changeCam(index, btn) {
+            // UI Toggle
+            document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Camera Logic
+            currentCam = index;
+            document.getElementById('cam-name').innerText = cameras[index].name;
+            document.getElementById('camera-view').src = cameras[index].img;
+            
+            // Hide bear if user switches cams
+            bear.style.display = 'none';
+        }
+
+        function spawnBear() {
+            // Εμφανίζεται μόνο αν η τύχη το θέλει (40% πιθανότητα)
+            if (Math.random() > 0.6) {
+                const randomX = Math.random() * 60 + 20;
+                const randomY = Math.random() * 60 + 20;
+                
+                bear.style.left = randomX + '%';
+                bear.style.top = randomY + '%';
+                bear.style.display = 'block';
+                
+                statusMsg.innerText = "!!! TARGET DETECTED !!!";
+                statusMsg.style.color = "#ff3333";
+
+                // Χάνεται μετά από 1.5 δευτερόλεπτο
+                setTimeout(() => {
+                    bear.style.display = 'none';
+                    if(statusMsg.innerText !== "TAGGED! +100 XP") {
+                        statusMsg.innerText = "SCANNING...";
+                        statusMsg.style.color = "#444";
+                    }
+                }, 1500);
+            }
+        }
+
+        function tagBear() {
+            score += 100;
+            document.getElementById('score').innerText = score;
+            bear.style.display = 'none';
+            statusMsg.innerText = "TAGGED! +100 XP";
+            statusMsg.style.color = "#33ff33";
+            
+            // Reset status after a while
+            setTimeout(() => {
+                statusMsg.innerText = "SCANNING...";
+                statusMsg.style.color = "#444";
+            }, 1000);
+        }
+
+        // Σύστημα σκαναρίσματος κάθε 3 δευτερόλεπτα
+        setInterval(spawnBear, 3000);
+    </script>
+</body>
+</html>
