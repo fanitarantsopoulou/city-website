@@ -187,8 +187,11 @@
                     adviceBox.innerHTML = "> ALERT: EXTREME COLD. EQUIP HEAVY WOOLEN GEAR.";
                 } else if(currentTemp <= 10) {
                     adviceBox.innerHTML = "> ADVICE: CHILLY VIBES. A COAT IS RECOMMENDED.";
-                } else {
+                } else if (currentTemp <= 20) {
                     adviceBox.innerHTML = "> STATUS: MILD CONDITIONS DETECTED.";
+                }
+                else {
+                    adviceBox.innerHTML = "> STATUS: WARM WEATHER. LIGHT CLOTHING SUFFICIENT.";
                 }
 
                 // 5. System Status & Time
