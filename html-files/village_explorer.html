@@ -103,20 +103,20 @@
 
     <div class="selector-box">
         <div class="village-list">
-            <button class="village-btn active" onclick="selectVillage('nymfaio', this)">NYMFAIO</button>
+            <button class="village-btn active" onclick="selectVillage('drosopigi', this)">DROSOPIGI</button>
             <button class="village-btn" onclick="selectVillage('psarades', this)">PSARADES</button>
             <button class="village-btn" onclick="selectVillage('sithiro', this)">SKLITHRO</button>
-            <button class="village-btn" onclick="selectVillage('lekhovo', this)">LECHOVO</button>
+            <button class="village-btn" onclick="selectVillage('ksino_nero', this)">XINO NERO</button>
             <button class="village-btn" onclick="selectVillage('agios_p', this)">AG.PANTELEIMON</button>
         </div>
 
         <div class="display-card" id="village-display">
             <div class="village-pixel-art" id="v-icon">🏔️</div>
             <div class="stats">
-                <div class="stat-line"><span class="stat-label">ALTITUDE:</span> <span id="v-alt">1350m</span></div>
-                <div class="stat-line"><span class="stat-label">SPECIALTY:</span> <span id="v-spec">Bears</span></div>
-                <div class="stat-line"><span class="stat-label">LOOT:</span> <span id="v-loot">Honey</span></div>
-                <div class="stat-line"><span class="stat-label">VIBE:</span> <span id="v-vibe">Stone Built</span></div>
+                <div class="stat-line"><span class="stat-label">ALTITUDE:</span> <span id="v-alt">1050m</span></div>
+                <div class="stat-line"><span class="stat-label">SPECIALTY:</span> <span id="v-spec">Green</span></div>
+                <div class="stat-line"><span class="stat-label">LOOT:</span> <span id="v-loot">Pies</span></div>
+                <div class="stat-line"><span class="stat-label">VIBE:</span> <span id="v-vibe">Heroic</span></div>
             </div>
         </div>
     </div>
@@ -126,11 +126,11 @@
     <script>
         // Database των χωριών
         const villageData = {
-            nymfaio: { alt: "1350m", spec: "Bears", loot: "Honey", vibe: "Stone Houses", icon: "🏔️" },
-            psarades: { alt: "850m", spec: "Fish", loot: "Prespa Beans", vibe: "Lakeside", icon: "🛶" },
+            drosopigi: { alt: "1050m", spec: "Green", loot: "Pies", vibe: "Heroic", icon: "🏔️" },
+            psarades: { alt: "850m", spec: "Fish", loot: "Grivadi Fish", vibe: "Lakeside", icon: "🛶" },
             sithiro: { alt: "680m", spec: "Gastronomy", loot: "Fine Wine", vibe: "Forest Edge", icon: "🍷" },
-            lekhovo: { alt: "900m", spec: "Tradition", loot: "Stone Craft", vibe: "Heroic", icon: "⚒️" },
-            agios_p: { alt: "600m", spec: "Wine", loot: "Xinomavro", vibe: "Sunset View", icon: "🍇" }
+            ksino_nero: { alt: "650m", spec: "Tradition", loot: "Sparkling Water", vibe: "Sparkly", icon: "💧" },
+            agios_p: { alt: "550m", spec: "Gastronomy", loot: "Fine Wine on the Lake", vibe: "Lake View", icon: "🍇" }
         };
 
         function selectVillage(id, btn) {
