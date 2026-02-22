@@ -12,10 +12,60 @@
             --bg-color: #e0f7fa;
             --text-color: #2c3e50;
             --card-bg: #ffffff;
+            --card-back-bg: #fff9c4;
             --accent: #ff6b6b;
             --river: #4fc3f7;
             --border: 4px solid #2c3e50;
             --shadow: 8px 8px 0px #2c3e50;
+            --header-bg: linear-gradient(180deg, #b2ebf2 0%, #e0f7fa 100%);
+            --modal-bg: #fff;
+            --modal-header-bg: #2c3e50;
+            --suggestion-bg: #f5f5f5;
+            --footer-bg: white;
+            --footer-text: #ccc;
+        }
+
+        /* --- DARK MODE --- */
+        [data-theme="dark"] {
+            --bg-color: #1a1a2e;
+            --text-color: #e0e0e0;
+            --card-bg: #16213e;
+            --card-back-bg: #0f3460;
+            --accent: #ff6b6b;
+            --river: #0f4c75;
+            --border: 4px solid #e94560;
+            --shadow: 8px 8px 0px #e94560;
+            --header-bg: linear-gradient(180deg, #16213e 0%, #1a1a2e 100%);
+            --modal-bg: #16213e;
+            --modal-header-bg: #0f3460;
+            --suggestion-bg: #1a1a2e;
+            --footer-bg: #16213e;
+            --footer-text: #888;
+        }
+
+        [data-theme="dark"] .snowflake {
+            background: #e94560;
+            border-color: #ff6b6b;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: #16213e;
+            border-color: #e94560;
+        }
+
+        [data-theme="dark"] .sidebar-header {
+            border-color: #e94560;
+        }
+
+        [data-theme="dark"] .menu-link:hover {
+            background: #0f3460;
+            border-color: #e94560;
+            box-shadow: 4px 4px 0 #e94560;
+        }
+
+        [data-theme="dark"] .river-divider::after {
+            background: #16213e;
+            border-color: #e94560;
         }
 
         * {
@@ -56,6 +106,37 @@
 
         .menu-toggle:hover {
             background: #ff8a80;
+        }
+
+        /* --- DARK MODE TOGGLE --- */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            color: var(--text-color);
+            border: var(--border);
+            box-shadow: 4px 4px 0 #000;
+            padding: 10px 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            z-index: 9999;
+            transition: transform 0.1s, background 0.3s;
+        }
+
+        .theme-toggle:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            box-shadow: 4px 4px 0 #e94560;
         }
 
         .sidebar {
@@ -169,10 +250,10 @@
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: var(--modal-bg);
             margin: 10% auto;
             padding: 20px;
-            border: 4px solid #2c3e50;
+            border: var(--border);
             width: 80%;
             max-width: 500px;
             box-shadow: 10px 10px 0 #000;
@@ -181,10 +262,11 @@
             text-align: left;
             max-height: 80vh;
             overflow-y: auto;
+            color: var(--text-color);
         }
 
         .modal-header {
-            background: #2c3e50;
+            background: var(--modal-header-bg);
             color: #fff;
             padding: 10px;
             margin: -20px -20px 20px -20px;
@@ -200,12 +282,17 @@
         }
 
         .suggestion-item {
-            background: #f5f5f5;
+            background: var(--suggestion-bg);
             border: 2px solid #ccc;
             padding: 10px;
             margin-bottom: 10px;
             font-size: 0.7rem;
             line-height: 1.5;
+            color: var(--text-color);
+        }
+
+        [data-theme="dark"] .suggestion-item {
+            border-color: #e94560;
         }
 
         .suggestion-item strong {
@@ -232,7 +319,7 @@
         header {
             text-align: center;
             padding: 40px 20px;
-            background: linear-gradient(180deg, #b2ebf2 0%, #e0f7fa 100%);
+            background: var(--header-bg);
             border-bottom: var(--border);
         }
 
@@ -313,7 +400,7 @@
         }
 
         .flip-card-back {
-            background-color: #fff9c4;
+            background-color: var(--card-back-bg);
             transform: rotateY(180deg);
             align-items: center;
             text-align: center;
@@ -507,8 +594,8 @@
             text-align: center;
             padding: 20px;
             font-size: 0.6rem;
-            background: white;
-            color: #ccc;
+            background: var(--footer-bg);
+            color: var(--footer-text);
             border-top: var(--border);
         }
 
@@ -540,6 +627,7 @@
     <div class="snowflake" style="left: 90%; animation-duration: 8s"></div>
 
     <button class="menu-toggle" onclick="toggleSidebar()">☰ MENU</button>
+    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Dark Mode">🌙</button>
 
     <div class="sidebar" id="mySidebar">
         <div class="sidebar-header">
@@ -956,6 +1044,38 @@
             const cardInner = element.closest('.flip-card-inner');
             cardInner.classList.toggle('flipped');
         }
+
+        // --- DARK MODE TOGGLE ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeBtn = document.querySelector('.theme-toggle');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                themeBtn.textContent = '🌙';
+                themeBtn.title = 'Switch to Dark Mode';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+                themeBtn.title = 'Switch to Light Mode';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // --- LOAD SAVED THEME ---
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeBtn = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                if (themeBtn) {
+                    themeBtn.textContent = '☀️';
+                    themeBtn.title = 'Switch to Light Mode';
+                }
+            }
+        })();
     </script>
 </body>
 
