@@ -1,99 +1,214 @@
 <!DOCTYPE html>
 <html lang="el">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Florina Weather Station 📟</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --terminal-green: #00ff00;
+            --terminal-bg: #0a0a0a;
+        }
+
         body {
-            background-color: #0d0d0d; /* Πολύ σκοτεινό για ατμόσφαιρα τερματικού */
-            color: #00ff00; /* Neon πράσινο σαν παλιές οθόνες */
+            background-color: var(--terminal-bg);
+            color: var(--terminal-green);
             font-family: 'Press Start 2P', cursive;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
-            border: 10px solid #222; /* Πλαίσιο σαν παλιά τηλεόραση */
-        }
-
-        .screen {
-            width: 80%;
-            max-width: 600px;
-            padding: 20px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 15px #00ff00;
-            position: relative;
             overflow: hidden;
         }
 
-        /* Scanline effect για να φαίνεται παλιά οθόνη */
-        .screen::before {
+        /* Scanline Effect */
+        body::before {
             content: " ";
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 100;
             pointer-events: none;
         }
 
-        .temp-display {
-            font-size: 3rem;
-            margin: 20px 0;
-            text-align: center;
+        .monitor {
+            width: 90%;
+            max-width: 700px;
+            border: 10px solid #333;
+            border-radius: 20px;
+            padding: 30px;
+            background: #0f1a0f;
+            box-shadow: inset 0 0 50px #000, 0 0 20px var(--terminal-green);
+            position: relative;
         }
 
-        .status-bar {
-            width: 100%;
-            height: 30px;
-            border: 2px solid #00ff00;
-            margin: 20px 0;
+        .header-box {
+            border-bottom: 2px solid var(--terminal-green);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
         }
 
-        .fill {
-            height: 100%;
-            width: 85%; /* Πόσο κρύο κάνει */
-            background-color: #00ff00;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        .btn-back {
-            margin-top: 30px;
-            color: #00ff00;
-            border: 2px solid #00ff00;
-            padding: 10px;
-            text-decoration: none;
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
             font-size: 0.7rem;
         }
-        .btn-back:hover { background: #00ff00; color: #000; }
+
+        .big-temp {
+            font-size: 4rem;
+            text-align: center;
+            margin: 30px 0;
+            text-shadow: 0 0 10px var(--terminal-green);
+        }
+
+        .progress-container {
+            border: 2px solid var(--terminal-green);
+            height: 25px;
+            width: 100%;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%; /* Ξεκινάει από το 0 και το ελέγχει η JS */
+            background: var(--terminal-green);
+            animation: flicker 0.1s infinite;
+            transition: width 1s ease-in-out;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        .glitch-text { animation: glitch 2s infinite; }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            2% { transform: translate(-2px, 2px); }
+            4% { transform: translate(2px, -2px); }
+            6% { transform: translate(0); }
+        }
+
+        .btn-return {
+            margin-top: 40px;
+            color: var(--terminal-green);
+            border: 3px solid var(--terminal-green);
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            z-index: 101;
+        }
+
+        .btn-return:hover {
+            background: var(--terminal-green);
+            color: #000;
+            box-shadow: 0 0 20px var(--terminal-green);
+        }
+
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
+
 <body>
 
-    <div class="screen">
-        <p>[SYSTEM ONLINE]</p>
-        <p>LOCATION: FLORINA_GREECE</p>
-        <hr>
-        <div class="temp-display">-4°C</div>
-        <p style="text-align: center;">STATUS: BITTER COLD</p>
-        
-        <div class="status-bar">
-            <div class="fill"></div>
+    <div class="monitor">
+        <div class="header-box">
+            > FLORINA_WEATHER_STATION_V.2.6<br>
+            > STATUS: <span class="blink" id="system-status">SCANNING...</span>
         </div>
-        
-        <p>ADVICE: WEAR 3 LAYERS OF WOOL</p>
-        <p>> CHECKING PRECIPITATION... SNOWING</p>
+
+        <div class="data-row">
+            <span>LOCATION:</span>
+            <span>40.78°N / 21.41°E</span>
+        </div>
+
+        <div class="big-temp" id="temp">...</div>
+
+        <div class="data-row">
+            <span>CONDITION:</span>
+            <span id="condition">---</span>
+        </div>
+
+        <div class="data-row" style="margin-top: 30px;">
+            <span>FROST_LEVEL:</span>
+            <span id="frost-val">0%</span>
+        </div>
+        <div class="progress-container">
+            <div class="progress-fill" id="frost-bar"></div>
+        </div>
+
+        <div style="margin-top: 40px; font-size: 0.6rem; line-height: 1.6;">
+            <p class="glitch-text" id="advice">> INITIALIZING SYSTEM...</p>
+            <p id="local-time">> TIME: --:--</p>
+        </div>
     </div>
 
-    <a href="index.html" class="btn-back">< RETURN TO BASE</a>
+    <a href="index.html" class="btn-return">< BACK TO BASE</a>
 
+    <script src="config.js"></script>
+    <script>
+        const apiKey = CONFIG.WEATHER_API_KEY;
+        const city = "Florina,GR";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        async function checkWeather() {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Connection Error");
+                
+                const data = await response.json();
+
+                // 1. Ενημέρωση Θερμοκρασίας
+                const currentTemp = Math.round(data.main.temp);
+                document.getElementById("temp").innerHTML = currentTemp + "°C";
+
+                // 2. Ενημέρωση Κατάστασης
+                document.getElementById("condition").innerHTML = data.weather[0].main.toUpperCase();
+
+                // 3. Υπολογισμός Frost Level (Αν έχει 10°C είναι 0%, αν έχει -10°C είναι 100%)
+                let frostPercent = Math.max(0, Math.min(100, (10 - currentTemp) * 5));
+                document.getElementById("frost-bar").style.width = frostPercent + "%";
+                document.getElementById("frost-val").innerHTML = Math.round(frostPercent) + "%";
+
+                // 4. Advice Logic
+                const adviceBox = document.getElementById("advice");
+                if(currentTemp <= 0) {
+                    adviceBox.innerHTML = "> ALERT: EXTREME COLD. EQUIP HEAVY WOOLEN GEAR.";
+                } else if(currentTemp <= 10) {
+                    adviceBox.innerHTML = "> ADVICE: CHILLY VIBES. A COAT IS RECOMMENDED.";
+                } else {
+                    adviceBox.innerHTML = "> STATUS: MILD CONDITIONS DETECTED.";
+                }
+
+                // 5. System Status & Time
+                document.getElementById("system-status").innerHTML = "ONLINE";
+                document.getElementById("system-status").classList.remove("blink");
+                
+                const now = new Date();
+                document.getElementById("local-time").innerHTML = "> TIME: " + now.getHours() + ":" + now.getMinutes().toString().padStart(2, '0');
+
+            } catch (error) {
+                document.getElementById("system-status").innerHTML = "OFFLINE (ERROR)";
+                document.getElementById("temp").innerHTML = "ERR";
+                document.getElementById("advice").innerHTML = "> SYSTEM FAILURE: API_KEY_NOT_FOUND";
+                console.error("Weather Error:", error);
+            }
+        }
+
+        // Εκτέλεση
+        checkWeather();
+    </script>
 </body>
+
 </html>
